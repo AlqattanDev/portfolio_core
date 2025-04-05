@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "133393946896",
+    "firebase_url": "https://alialqattandev-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "alialqattandev",
+    "storage_bucket": "alialqattandev.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:133393946896:android:28fb7857bff98219816d95",
+        "android_client_info": {
+          "package_name": "com.example.ididntstealthisreem"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXNjK5l-ExhjpI3leZM4Jyh5ZvFQYUazY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:133393946896:android:d481cd330c8f6025816d95",
+        "android_client_info": {
+          "package_name": "com.example.portfolio_core"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXNjK5l-ExhjpI3leZM4Jyh5ZvFQYUazY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
