@@ -1,9 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:portfolio_core/services/auth_service.dart';
+import 'package:portfolio_core/services/blog_service.dart';
 import 'package:portfolio_core/screens/tabbed_portfolio_screen.dart';
 import 'package:portfolio_core/theme/simplified_theme.dart';
+import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart'; // Import Firebase Core
+import 'package:portfolio_core/firebase_options.dart'; // Import generated options
 
-void main() {
-  runApp(const PortfolioApp());
+Future<void> main() async {
+  // Make main async
+  WidgetsFlutterBinding.ensureInitialized(); // Ensure bindings are initialized
+  await Firebase.initializeApp(
+    // Initialize Firebase
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthService()),
+        // BlogService depends on AuthService
+        ProxyProvider<AuthService, BlogService>(
+          update: (_, authService, previousBlogService) =>
+              BlogService(authService),
+          // We only need to create it once and provide the AuthService instance
+        ),
+      ],
+      child: const PortfolioApp(),
+    ),
+  );
 }
 
 class PortfolioApp extends StatelessWidget {
@@ -21,14 +45,6 @@ class PortfolioApp extends StatelessWidget {
         scrollbars: false,
         overscroll: false,
       ),
-      builder: (context, child) {
-        return MediaQuery(
-          data: MediaQuery.of(context).copyWith(
-            textScaler: TextScaler.linear(1.0),
-          ),
-          child: child!,
-        );
-      },
       home: const TabbedPortfolioScreen(),
     );
   }

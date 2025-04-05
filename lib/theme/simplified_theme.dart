@@ -1,3 +1,4 @@
+import 'dart:ui' show lerpDouble;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -20,11 +21,17 @@ class SimplifiedTheme {
   static const Color textDark = Color(0xFF2C3E50);
   static const Color textLight = Color(0xFFABB2BF);
 
-  // Border radius
-  static const double borderRadius = 12.0;
+  // Border radius (Moved to PortfolioThemeExtension)
 
   // Get Light Theme
+  // Define standard padding/spacing values
+  static const EdgeInsets _screenPadding = EdgeInsets.all(24.0);
+  static const EdgeInsets _contentPadding = EdgeInsets.all(16.0);
+  static const EdgeInsets _smallPadding = EdgeInsets.all(8.0);
+  static const double _itemSpacing = 16.0;
+
   static ThemeData getLightTheme() {
+    const double borderRadius = 12.0; // Define locally for theme creation
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
@@ -89,11 +96,21 @@ class SimplifiedTheme {
           fontSize: 14,
         ),
       ),
+      extensions: const <ThemeExtension<dynamic>>[
+        PortfolioThemeExtension(
+          cardBorderRadius: borderRadius,
+          screenPadding: _screenPadding,
+          contentPadding: _contentPadding,
+          smallPadding: _smallPadding,
+          itemSpacing: _itemSpacing,
+        ),
+      ],
     );
   }
 
   // Get Dark Theme
   static ThemeData getDarkTheme() {
+    const double borderRadius = 12.0; // Define locally for theme creation
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
@@ -158,6 +175,15 @@ class SimplifiedTheme {
           fontSize: 14,
         ),
       ),
+      extensions: const <ThemeExtension<dynamic>>[
+        PortfolioThemeExtension(
+          cardBorderRadius: borderRadius,
+          screenPadding: _screenPadding,
+          contentPadding: _contentPadding,
+          smallPadding: _smallPadding,
+          itemSpacing: _itemSpacing,
+        ),
+      ],
     );
   }
 
@@ -214,4 +240,66 @@ class SimplifiedTheme {
       ),
     );
   }
+}
+
+// --- Theme Extension ---
+
+/// Defines custom theme properties for the portfolio app.
+class PortfolioThemeExtension extends ThemeExtension<PortfolioThemeExtension> {
+  const PortfolioThemeExtension({
+    required this.cardBorderRadius,
+    required this.screenPadding,
+    required this.contentPadding,
+    required this.smallPadding,
+    required this.itemSpacing,
+  });
+
+  final double cardBorderRadius;
+  final EdgeInsets screenPadding;
+  final EdgeInsets contentPadding;
+  final EdgeInsets smallPadding;
+  final double itemSpacing;
+
+  @override
+  PortfolioThemeExtension copyWith({
+    double? cardBorderRadius,
+    EdgeInsets? screenPadding,
+    EdgeInsets? contentPadding,
+    EdgeInsets? smallPadding,
+    double? itemSpacing,
+  }) {
+    return PortfolioThemeExtension(
+      cardBorderRadius: cardBorderRadius ?? this.cardBorderRadius,
+      screenPadding: screenPadding ?? this.screenPadding,
+      contentPadding: contentPadding ?? this.contentPadding,
+      smallPadding: smallPadding ?? this.smallPadding,
+      itemSpacing: itemSpacing ?? this.itemSpacing,
+    );
+  }
+
+  @override
+  PortfolioThemeExtension lerp(
+      ThemeExtension<PortfolioThemeExtension>? other, double t) {
+    if (other is! PortfolioThemeExtension) {
+      return this;
+    }
+    return PortfolioThemeExtension(
+      cardBorderRadius:
+          lerpDouble(cardBorderRadius, other.cardBorderRadius, t) ??
+              cardBorderRadius,
+      screenPadding: EdgeInsets.lerp(screenPadding, other.screenPadding, t) ??
+          screenPadding,
+      contentPadding:
+          EdgeInsets.lerp(contentPadding, other.contentPadding, t) ??
+              contentPadding,
+      smallPadding:
+          EdgeInsets.lerp(smallPadding, other.smallPadding, t) ?? smallPadding,
+      itemSpacing: lerpDouble(itemSpacing, other.itemSpacing, t) ?? itemSpacing,
+    );
+  }
+
+  // Optional: Add toString for debugging
+  @override
+  String toString() =>
+      'PortfolioThemeExtension(cardBorderRadius: $cardBorderRadius, screenPadding: $screenPadding, contentPadding: $contentPadding, smallPadding: $smallPadding, itemSpacing: $itemSpacing)';
 }

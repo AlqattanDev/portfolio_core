@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:portfolio_core/models/project.dart';
 import 'package:portfolio_core/theme/simplified_theme.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:portfolio_core/services/url_launcher_service.dart';
 
 class ProjectCard extends StatelessWidget {
   final Project project;
@@ -20,7 +20,9 @@ class ProjectCard extends StatelessWidget {
         color: isDarkMode
             ? SimplifiedTheme.backgroundDark
             : SimplifiedTheme.backgroundLight,
-        borderRadius: BorderRadius.circular(SimplifiedTheme.borderRadius),
+        borderRadius: BorderRadius.circular(Theme.of(context)
+            .extension<PortfolioThemeExtension>()!
+            .cardBorderRadius),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withAlpha(isDarkMode ? 40 : 20),
@@ -41,10 +43,12 @@ class ProjectCard extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
-          
+
           // Project content
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: Theme.of(context)
+                .extension<PortfolioThemeExtension>()!
+                .contentPadding,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -54,14 +58,14 @@ class ProjectCard extends StatelessWidget {
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 const SizedBox(height: 8),
-                
+
                 // Description
                 Text(
                   project.description,
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Technologies
                 Wrap(
                   spacing: 8,
@@ -69,7 +73,8 @@ class ProjectCard extends StatelessWidget {
                   children: project.technologies.map((tech) {
                     return Chip(
                       label: Text(tech),
-                      backgroundColor: SimplifiedTheme.primaryBlue.withOpacity(0.15),
+                      backgroundColor: SimplifiedTheme.primaryBlue
+                          .withAlpha((0.15 * 255).round()),
                       labelStyle: TextStyle(
                         color: SimplifiedTheme.primaryBlue,
                         fontWeight: FontWeight.w500,
@@ -78,7 +83,7 @@ class ProjectCard extends StatelessWidget {
                   }).toList(),
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Links
                 Row(
                   children: [
@@ -87,7 +92,7 @@ class ProjectCard extends StatelessWidget {
                         context,
                         'GitHub',
                         Icons.code,
-                        () => _launchUrl(project.githubUrl!),
+                        () => UrlLauncherService.openUrl(project.githubUrl!),
                       ),
                     const SizedBox(width: 12),
                     if (project.liveUrl != null)
@@ -95,7 +100,7 @@ class ProjectCard extends StatelessWidget {
                         context,
                         'Live Demo',
                         Icons.open_in_new,
-                        () => _launchUrl(project.liveUrl!),
+                        () => UrlLauncherService.openUrl(project.liveUrl!),
                       ),
                   ],
                 ),
@@ -126,12 +131,5 @@ class ProjectCard extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Future<void> _launchUrl(String url) async {
-    final uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
-    }
   }
 }
