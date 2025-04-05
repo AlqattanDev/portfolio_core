@@ -30,15 +30,13 @@ class ContactTab extends StatelessWidget {
               .extension<PortfolioThemeExtension>()!
               .screenPadding,
           decoration: BoxDecoration(
-            color: isDarkMode
-                ? SimplifiedTheme.backgroundDark
-                : SimplifiedTheme.backgroundLight,
+            color: Theme.of(context).scaffoldBackgroundColor,
             borderRadius: BorderRadius.circular(Theme.of(context)
                 .extension<PortfolioThemeExtension>()!
                 .cardBorderRadius),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withAlpha(isDarkMode ? 40 : 20),
+                color: Theme.of(context).shadowColor.withAlpha(isDarkMode ? 40 : 20),
                 blurRadius: 8,
                 offset: const Offset(0, 3),
               ),
