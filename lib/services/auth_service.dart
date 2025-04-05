@@ -143,6 +143,40 @@ class AuthService with ChangeNotifier {
     }
   }
 
+  // Debug login method (for development/testing)
+  Future<void> debugLogin() async {
+    if (kDebugMode) {
+      _setLoading(true);
+      _clearError();
+      // Simulate a logged-in user without actual Firebase auth
+      // This requires a way to create a mock User object or bypass the check.
+      // For simplicity, let's assume we can directly set _currentUser
+      // In a real app, you might need a more robust mock or use a test account.
+      // WARNING: This bypasses actual authentication. Use only in debug builds.
+      _currentUser =
+          _auth.currentUser; // Or create a mock User if needed and possible
+      if (_currentUser == null) {
+        // If no actual user is cached, we might need to simulate one.
+        // This part is tricky without a mocking framework or test credentials.
+        // For now, let's just log a warning if no user is available.
+        print(
+            'AuthService: debugLogin called, but no Firebase user is cached. Cannot simulate login.');
+        _setError('Debug login failed: No cached user.');
+        _setLoading(false);
+        return; // Exit if we can't simulate
+      }
+      print(
+          'AuthService: Simulating login for user: ${_currentUser?.email ?? _currentUser?.uid}');
+      _setLoading(false);
+      notifyListeners();
+    } else {
+      print(
+          'AuthService: debugLogin called in release mode. Operation ignored.');
+      // Optionally set an error or just do nothing in release mode
+      _setError('Debug login is only available in debug mode.');
+    }
+  }
+
   // --- Helper methods for state management ---
 
   void _setLoading(bool loading) {

@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart'; // Add provider import
 import 'package:portfolio_core/theme/simplified_theme.dart';
-import 'package:portfolio_core/data/portfolio_data.dart';
+import 'package:portfolio_core/data/portfolio_data.dart'; // Keep for type reference
 import 'package:portfolio_core/widgets/common/portfolio_tab_view.dart';
 import 'package:portfolio_core/widgets/common/contact_info_item.dart';
 import 'package:portfolio_core/services/url_launcher_service.dart';
 
 class ContactTab extends StatelessWidget {
-  final PortfolioData portfolioData;
+  // Remove portfolioData field
 
-  const ContactTab({super.key, required this.portfolioData});
+  const ContactTab({super.key}); // Remove portfolioData from constructor
 
   @override
   Widget build(BuildContext context) {
+    // Get data from provider
+    final portfolioData = context.watch<PortfolioData>();
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return PortfolioTabView(
@@ -36,7 +39,9 @@ class ContactTab extends StatelessWidget {
                 .cardBorderRadius),
             boxShadow: [
               BoxShadow(
-                color: Theme.of(context).shadowColor.withAlpha(isDarkMode ? 40 : 20),
+                color: Theme.of(context)
+                    .shadowColor
+                    .withAlpha(isDarkMode ? 40 : 20),
                 blurRadius: 8,
                 offset: const Offset(0, 3),
               ),

@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:portfolio_core/data/portfolio_data.dart';
+import 'package:provider/provider.dart'; // Add provider import
+import 'package:portfolio_core/data/portfolio_data.dart'; // Keep for type reference
 import 'package:portfolio_core/widgets/project_card.dart';
 import 'package:portfolio_core/widgets/common/portfolio_tab_view.dart';
 
 class ProjectsTab extends StatelessWidget {
-  final PortfolioData portfolioData;
+  // Remove portfolioData field
 
-  const ProjectsTab({super.key, required this.portfolioData});
+  const ProjectsTab({super.key}); // Remove portfolioData from constructor
 
   @override
   Widget build(BuildContext context) {
+    // Get data from provider
+    final portfolioData = context.watch<PortfolioData>();
     return PortfolioTabView(
       title: 'Projects',
       children: [

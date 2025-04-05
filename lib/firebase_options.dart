@@ -41,54 +41,48 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAFlpqcvU61bVTnY_0go9ZgqSwQ3kXX3Z8',
-    appId: '1:133393946896:web:20b5449d128c1c90816d95',
-    messagingSenderId: '133393946896',
-    projectId: 'alialqattandev',
-    authDomain: 'alialqattandev.firebaseapp.com',
-    databaseURL: 'https://alialqattandev-default-rtdb.europe-west1.firebasedatabase.app',
-    storageBucket: 'alialqattandev.firebasestorage.app',
-    measurementId: 'G-J5Q0EX54WB',
-  );
-
-  static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyAFlpqcvU61bVTnY_0go9ZgqSwQ3kXX3Z8',
-    appId: '1:133393946896:web:20b5449d128c1c90816d95',
-    messagingSenderId: '133393946896',
-    projectId: 'alialqattandev',
-    authDomain: 'alialqattandev.firebaseapp.com',
-    databaseURL: 'https://alialqattandev-default-rtdb.europe-west1.firebasedatabase.app',
-    storageBucket: 'alialqattandev.firebasestorage.app',
-    measurementId: 'G-J5Q0EX54WB',
-  );
-
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyAAxmMgR-id2KAzpJ-9XgbfGSmKRajfrb8',
-    appId: '1:133393946896:ios:7f8180f255b0b379816d95',
-    messagingSenderId: '133393946896',
-    projectId: 'alialqattandev',
-    databaseURL: 'https://alialqattandev-default-rtdb.europe-west1.firebasedatabase.app',
-    storageBucket: 'alialqattandev.firebasestorage.app',
-    iosBundleId: 'com.example.portfolioCore',
-  );
-
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAAxmMgR-id2KAzpJ-9XgbfGSmKRajfrb8',
-    appId: '1:133393946896:ios:7f8180f255b0b379816d95',
-    messagingSenderId: '133393946896',
-    projectId: 'alialqattandev',
-    databaseURL: 'https://alialqattandev-default-rtdb.europe-west1.firebasedatabase.app',
-    storageBucket: 'alialqattandev.firebasestorage.app',
-    iosBundleId: 'com.example.portfolioCore',
+    apiKey: 'AIzaSyAB3j7Cxid6KbrEKHfdZvFTXmTjV0xGmw8',
+    appId: '1:323935418840:web:09c489044ac816587f5aad',
+    messagingSenderId: '323935418840',
+    projectId: 'portfolio-x-carbon',
+    authDomain: 'portfolio-x-carbon.firebaseapp.com',
+    storageBucket: 'portfolio-x-carbon.firebasestorage.app',
+    measurementId: 'G-YYJG3SN3J9',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDXNjK5l-ExhjpI3leZM4Jyh5ZvFQYUazY',
-    appId: '1:133393946896:android:d481cd330c8f6025816d95',
-    messagingSenderId: '133393946896',
-    projectId: 'alialqattandev',
-    databaseURL: 'https://alialqattandev-default-rtdb.europe-west1.firebasedatabase.app',
-    storageBucket: 'alialqattandev.firebasestorage.app',
+    apiKey: 'AIzaSyCqLKCKeOB4fprNYuP8ItkeU2CpBG5F9sY',
+    appId: '1:323935418840:android:469012330df0a54d7f5aad',
+    messagingSenderId: '323935418840',
+    projectId: 'portfolio-x-carbon',
+    storageBucket: 'portfolio-x-carbon.firebasestorage.app',
   );
 
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyAhZB9qxQuk_A7fvSw5P2YLO2GnAq-k_6c',
+    appId: '1:323935418840:ios:6c97a320f6f51a317f5aad',
+    messagingSenderId: '323935418840',
+    projectId: 'portfolio-x-carbon',
+    storageBucket: 'portfolio-x-carbon.firebasestorage.app',
+    iosBundleId: 'com.example.portfolioCore',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyAhZB9qxQuk_A7fvSw5P2YLO2GnAq-k_6c',
+    appId: '1:323935418840:ios:6c97a320f6f51a317f5aad',
+    messagingSenderId: '323935418840',
+    projectId: 'portfolio-x-carbon',
+    storageBucket: 'portfolio-x-carbon.firebasestorage.app',
+    iosBundleId: 'com.example.portfolioCore',
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyAB3j7Cxid6KbrEKHfdZvFTXmTjV0xGmw8',
+    appId: '1:323935418840:web:d1134d1c24ec9fde7f5aad',
+    messagingSenderId: '323935418840',
+    projectId: 'portfolio-x-carbon',
+    authDomain: 'portfolio-x-carbon.firebaseapp.com',
+    storageBucket: 'portfolio-x-carbon.firebasestorage.app',
+    measurementId: 'G-N0WMTRBD1L',
+  );
 }

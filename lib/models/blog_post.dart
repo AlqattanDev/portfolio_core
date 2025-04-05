@@ -53,10 +53,11 @@ class BlogPost {
   // Note: We don't include 'id' here as it's the document ID.
   Map<String, dynamic> toFirestore() {
     final data = {
-      'title': title,
-      'markdownContent': markdownContent,
+      'title': title.isEmpty ? 'Untitled Post' : title,
+      'markdownContent':
+          markdownContent.isEmpty ? 'No content yet...' : markdownContent,
       'updatedAt': FieldValue.serverTimestamp(),
-      'authorId': authorId,
+      'authorId': authorId?.isEmpty ?? true ? null : authorId,
     };
 
     // Don't override createdAt for existing documents

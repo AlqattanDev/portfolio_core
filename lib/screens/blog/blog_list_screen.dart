@@ -49,38 +49,15 @@ class _BlogListScreenState extends State<BlogListScreen> {
     // Access AuthService to check authentication status for the FAB
     // Use watch: true (default) or select to rebuild when auth state changes
     final authService = Provider.of<AuthService>(context);
+    // Get BlogService instance - listen: false as we only need it for actions
+    final blogService = Provider.of<BlogService>(context, listen: false);
 
     return Scaffold(
-      // Using a simple AppBar for now, can be integrated into TabbedPortfolioScreen later
-      appBar: AppBar(
-        title: const Text('Blog Posts'),
-        actions: [
-          // Optional: Add Login/Logout button based on auth state
-          // Refresh button removed as StreamBuilder handles updates
-          if (authService.isAuthenticated)
-            IconButton(
-              icon: const Icon(Icons.logout),
-              onPressed: () async {
-                // Store context in local variable before async operation
-                final scaffoldMessenger = ScaffoldMessenger.of(context);
-
-                await authService.logout();
-
-                // Use stored reference after async operation
-                scaffoldMessenger.showSnackBar(
-                  const SnackBar(content: Text('Logged out successfully')),
-                );
-              },
-              tooltip: 'Logout',
-            )
-          else
-            IconButton(
-              icon: const Icon(Icons.login),
-              onPressed: () => _navigateToLoginScreen(context),
-              tooltip: 'Login',
-            ),
-        ],
-      ),
+      // AppBar removed as authentication is handled globally by AuthWrapper
+      // appBar: AppBar(
+      //   title: const Text('Blog Posts'),
+      //   // Actions removed
+      // ),
       // Use StreamBuilder to listen to the posts stream
       body: StreamBuilder<List<BlogPost>>(
         stream:
@@ -116,17 +93,102 @@ class _BlogListScreenState extends State<BlogListScreen> {
             final posts = snapshot.data!;
             // No need for RefreshIndicator with StreamBuilder
             return ListView.builder(
+              padding: Theme.of(context)
+                  .extension<PortfolioThemeExtension>()!
+                  .contentPadding, // Added consistent padding
               itemCount: posts.length,
               itemBuilder: (context, index) {
                 final post = posts[index];
                 // Format Timestamp correctly
                 final formattedDate =
                     post.createdAt.toDate().toString().substring(0, 10);
+
+                Widget? trailingWidget;
+                if (authService.isAuthenticated) {
+                  trailingWidget = Row(
+                    mainAxisSize:
+                        MainAxisSize.min, // Prevent row from expanding
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.edit),
+                        tooltip: 'Edit Post',
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  BlogPostEditScreen(postId: post.id),
+                            ),
+                          );
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.delete,
+                            color: Theme.of(context).colorScheme.error),
+                        tooltip: 'Delete Post',
+                        onPressed: () async {
+                          // Show confirmation dialog
+                          final confirm = await showDialog<bool>(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text('Confirm Deletion'),
+                                content: Text(
+                                    'Are you sure you want to delete "${post.title}"?'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: const Text('Cancel'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop(false);
+                                    },
+                                  ),
+                                  TextButton(
+                                    child: Text('Delete',
+                                        style: TextStyle(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .error)),
+                                    onPressed: () {
+                                      Navigator.of(context).pop(true);
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+
+                          // If confirmed, delete the post
+                          if (confirm == true) {
+                            try {
+                              await blogService.deletePost(post.id);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text('Post deleted successfully')),
+                              );
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                    content: Text(
+                                        'Error deleting post: ${e.toString()}')),
+                              );
+                            }
+                          }
+                        },
+                      ),
+                    ],
+                  );
+                } else {
+                  // Show chevron if not authenticated (for navigation hint)
+                  trailingWidget = const Icon(Icons.chevron_right);
+                }
+
                 return ListTile(
+                  contentPadding: EdgeInsets.zero, // Use ListView padding
                   title: Text(post.title),
                   subtitle:
                       Text('Published: $formattedDate'), // Use formatted date
-                  trailing: const Icon(Icons.chevron_right),
+                  trailing:
+                      trailingWidget, // Use the conditional trailing widget
                   onTap: () => _navigateToViewScreen(context, post.id),
                 );
               },

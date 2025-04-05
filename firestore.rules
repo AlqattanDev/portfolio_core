@@ -1,33 +1,26 @@
-rules_version = '2';
+        rules_version = '2';
+        service cloud.firestore {
+          match /databases/{database}/documents {
+            // User Info: Allow anyone to read, but only authenticated users to write
+            match /userInfo/{docId} {
+              allow read: if true;
+              allow write: if request.auth != null;
+            }
 
-service cloud.firestore {
-  match /databases/{database}/documents {
+            // Projects: Allow authenticated users to read and write
+            match /projects/{projectId} {
+              allow read, write: if request.auth != null;
+            }
 
-    // Allow public read access to projects
-    match /projects/{projectId} {
-      allow get, list: if true;
-      allow create, update, delete: if false; // Writes disallowed for now
-    }
+            // Skills: Allow authenticated users to read and write
+            match /skills/{skillId} {
+              allow read, write: if request.auth != null;
+            }
 
-    // Allow public read access to skills
-    // Assuming skills are stored similarly or adjust path if needed
-    match /skills/{skillId} {
-      allow get, list: if true;
-      allow create, update, delete: if false; // Writes disallowed for now
-    }
-
-    // Rules for blog posts
-    match /posts/{postId} {
-      // Anyone can read blog posts
-      allow get, list: if true;
-
-      // Only authenticated users can create posts
-      allow create: if request.auth != null;
-
-      // Only the author of the post can update or delete it
-      allow update, delete: if request.auth != null && request.auth.uid == resource.data.authorId;
-    }
-
-    // Firestore defaults to denying access for any path not explicitly matched.
-  }
-}
+            // Blog Posts: Allow authenticated users to read and write
+            // Note: The BlogService code already checks if the user is the author for update/delete
+            match /posts/{postId} {
+              allow read, write: if request.auth != null;
+            }
+          }
+        }

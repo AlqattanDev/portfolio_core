@@ -21,7 +21,6 @@ class ContactInfoItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final content = Row(
       children: [
         Icon(
@@ -42,7 +41,9 @@ class ContactInfoItem extends StatelessWidget {
                 value,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: isClickable ? Theme.of(context).colorScheme.primary : null,
+                      color: isClickable
+                          ? Theme.of(context).colorScheme.primary
+                          : null,
                     ),
               ),
             ],
@@ -57,14 +58,19 @@ class ContactInfoItem extends StatelessWidget {
       ],
     );
 
+    final themeExtension =
+        Theme.of(context).extension<PortfolioThemeExtension>()!;
+    final isRetro = themeExtension.cardBorderRadius == 0;
+    final borderRadius = isRetro
+        ? BorderRadius.zero
+        : BorderRadius.circular(12); // Use 12 for non-retro
+
     if (isClickable && onTap != null) {
       return InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: borderRadius, // Use conditional border radius
         child: Padding(
-          padding: Theme.of(context)
-              .extension<PortfolioThemeExtension>()!
-              .smallPadding,
+          padding: themeExtension.smallPadding,
           child: content,
         ),
       );

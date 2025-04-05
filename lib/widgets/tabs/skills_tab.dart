@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart'; // Add provider import
 import 'package:portfolio_core/theme/simplified_theme.dart';
-import 'package:portfolio_core/data/portfolio_data.dart';
+import 'package:portfolio_core/data/portfolio_data.dart'; // Keep for type reference
 import 'package:portfolio_core/widgets/common/portfolio_tab_view.dart';
 import 'package:portfolio_core/widgets/common/skill_progress_bar.dart';
 
 class SkillsTab extends StatelessWidget {
-  final PortfolioData portfolioData;
+  // Remove portfolioData field
 
-  const SkillsTab({super.key, required this.portfolioData});
+  const SkillsTab({super.key}); // Remove portfolioData from constructor
 
   @override
   Widget build(BuildContext context) {
+    // Get data from provider
+    final portfolioData = context.watch<PortfolioData>();
     final spacing =
         Theme.of(context).extension<PortfolioThemeExtension>()!.itemSpacing;
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:portfolio_core/services/auth_service.dart';
+import 'package:portfolio_core/theme/colors.dart'; // Import AppColors
 import 'package:portfolio_core/theme/simplified_theme.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart'; // Add this import for kDebugMode
@@ -46,11 +47,38 @@ class _LoginScreenState extends State<LoginScreen> {
       Navigator.pop(context); // Assuming it was pushed onto the stack
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-            content: Text('Login Successful!'), backgroundColor: Colors.green),
+            content: Text('Login Successful!'),
+            backgroundColor: AppColors.success), // Use semantic color
       );
     }
     // Error messages are handled by listening to authService.errorMessage below
     // If login fails, the error message will appear automatically due to the listener
+  }
+
+  // Auto-login function for development
+  Future<void> _autoLogin() async {
+    if (!kDebugMode) return; // Only run in debug mode
+
+    // Hide keyboard
+    FocusScope.of(context).unfocus();
+
+    // Access AuthService
+    if (!mounted) return;
+    final authService = Provider.of<AuthService>(context, listen: false);
+
+    await authService.debugLogin(); // Call the debug login method
+
+    // Check if mounted again after async gap
+    if (mounted && authService.isAuthenticated) {
+      // Navigate back or to home screen on successful login
+      Navigator.pop(context); // Assuming it was pushed onto the stack
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('Debug Login Successful!'),
+            backgroundColor: AppColors.warning), // Use semantic color
+      );
+    }
+    // Error messages from debugLogin are handled by the listener
   }
 
   // Development helper function - REMOVE FOR PRODUCTION
@@ -72,7 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
           const SnackBar(
             content: Text(
                 'Test account created successfully!\nEmail: test@example.com\nPassword: Test123!'),
-            backgroundColor: Colors.green,
+            backgroundColor: AppColors.success, // Use semantic color
             duration: Duration(seconds: 10),
           ),
         );
@@ -86,7 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Error creating test account: ${e.toString()}'),
-            backgroundColor: Colors.red,
+            backgroundColor: AppColors.error, // Use semantic color
           ),
         );
       }
@@ -97,6 +125,16 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     // Listen to AuthService for loading state and error messages
     final authService = Provider.of<AuthService>(context);
+    final themeExtension =
+        Theme.of(context).extension<PortfolioThemeExtension>()!;
+    final isRetro = themeExtension.cardBorderRadius == 0;
+    final inputBorder =
+        isRetro ? const UnderlineInputBorder() : const OutlineInputBorder();
+    final devButtonColor =
+        isRetro ? Theme.of(context).colorScheme.secondary : AppColors.warning;
+    // For retro themes, onSecondary is usually the background color (e.g., black/dark green)
+    // For the warning button, we need explicit white text for contrast.
+    final devButtonForegroundColor = isRetro ? null : Colors.white;
 
     return Scaffold(
       appBar: AppBar(
@@ -147,10 +185,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 TextFormField(
                   controller: _usernameController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
+                    // Use variable border
                     labelText: 'Email',
-                    prefixIcon: Icon(Icons.email_outlined),
-                    border: OutlineInputBorder(),
+                    prefixIcon: const Icon(Icons.email_outlined),
+                    border: inputBorder,
                   ),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
@@ -169,10 +208,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _passwordController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
+                    // Use variable border
                     labelText: 'Password',
-                    prefixIcon: Icon(Icons.lock_outline),
-                    border: OutlineInputBorder(),
+                    prefixIcon: const Icon(Icons.lock_outline),
+                    border: inputBorder,
                   ),
                   obscureText: true,
                   validator: (value) {
@@ -194,11 +234,26 @@ class _LoginScreenState extends State<LoginScreen> {
                         icon: const Icon(Icons.login),
                         label: const Text('Login'),
                         onPressed: _login,
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          textStyle: Theme.of(context).textTheme.titleMedium,
-                        ),
+                        // Remove explicit style to use theme's ElevatedButtonThemeData
                       ),
+                // Add Auto Login button only in debug mode
+                if (kDebugMode) ...[
+                  const SizedBox(height: 16),
+                  ElevatedButton.icon(
+                    icon: const Icon(Icons.auto_fix_high),
+                    label: const Text('Auto Login (Dev)'),
+                    onPressed: authService.isLoading ? null : _autoLogin,
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      backgroundColor: devButtonColor, // Use conditional color
+                      foregroundColor:
+                          devButtonForegroundColor, // Use conditional foreground
+                      textStyle: Theme.of(context).textTheme.titleMedium,
+                    ).merge(Theme.of(context)
+                        .elevatedButtonTheme
+                        .style), // Merge with base theme style if needed
+                  ),
+                ],
               ],
             ),
           ),
@@ -210,7 +265,9 @@ class _LoginScreenState extends State<LoginScreen> {
               onPressed: _createTestAccount,
               icon: const Icon(Icons.admin_panel_settings),
               label: const Text('Create Test Account'),
-              backgroundColor: Colors.orange,
+              backgroundColor: devButtonColor, // Use conditional color
+              foregroundColor:
+                  devButtonForegroundColor, // Use conditional foreground
             )
           : null,
     );

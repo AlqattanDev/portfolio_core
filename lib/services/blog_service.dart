@@ -6,7 +6,12 @@ class BlogService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final AuthService _authService;
 
-  BlogService(this._authService);
+  BlogService(this._authService) {
+    // Ensure defaults are checked when the service is initialized
+    // Consider if this is the best place or if it should be called
+    // explicitly elsewhere (e.g., during app startup).
+    ensureBlogDefaults();
+  }
 
   // Get a reference to the 'posts' collection
   CollectionReference<BlogPost> get _postsCollection =>
@@ -21,6 +26,47 @@ class BlogService {
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
+  }
+
+  // Ensures Blog collection has a default post if empty
+  Future<void> ensureBlogDefaults() async {
+    try {
+      final snapshot = await _postsCollection.limit(1).get();
+
+      if (snapshot.docs.isEmpty) {
+        // Collection is empty, add a default post
+        print('Blog posts collection is empty. Adding default post.');
+        final user = _authService.currentUser;
+        // Use a placeholder author ID if no user is logged in during init,
+        // or handle this case based on application logic.
+        final authorId = user?.uid ?? 'system_default';
+
+        final defaultPost = BlogPost(
+          id: 'sample-post', // Firestore will generate an ID, but useful for potential direct set
+          title: 'My First Blog Post',
+          markdownContent: '''
+# Welcome to the Blog!
+
+This is a sample blog post created automatically.
+
+You can **edit** or *delete* this post and start adding your own content.
+
+- Use Markdown for formatting.
+- Share your thoughts and projects.
+''',
+          authorId: authorId, // Assign the current user or a default
+          createdAt: Timestamp.now(), // Set current time
+          updatedAt: Timestamp.now(),
+        );
+
+        // Use add() to let Firestore generate the ID
+        await _firestore.collection('posts').add(defaultPost.toFirestore());
+        print('Created default Blog Post document');
+      }
+    } catch (e) {
+      print('Error ensuring Blog defaults: $e');
+      // Handle error appropriately
+    }
   }
 
   // Fetch a single post by ID

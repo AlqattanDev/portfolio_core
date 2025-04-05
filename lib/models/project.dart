@@ -61,12 +61,14 @@ class Project {
     return {
       'title': title,
       'description': description,
-      'technologies': technologies,
-      'imageUrl': imageUrl,
-      'githubUrl': githubUrl,
-      'liveUrl': liveUrl,
+      'technologies':
+          technologies.isEmpty ? ['No technologies specified'] : technologies,
+      'imageUrl':
+          imageUrl.isEmpty ? 'https://via.placeholder.com/300x200' : imageUrl,
+      'githubUrl': githubUrl?.isEmpty ?? true ? null : githubUrl,
+      'liveUrl': liveUrl?.isEmpty ?? true ? null : liveUrl,
       // Consider adding timestamps if needed (e.g., 'createdAt', 'updatedAt')
-      // 'updatedAt': FieldValue.serverTimestamp(),
+      'updatedAt': FieldValue.serverTimestamp(),
     };
   }
 }

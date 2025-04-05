@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart'; // Add provider import
 import 'package:portfolio_core/theme/simplified_theme.dart';
-import 'package:portfolio_core/data/portfolio_data.dart';
+import 'package:portfolio_core/data/portfolio_data.dart'; // Keep for type reference
 import 'package:portfolio_core/widgets/common/portfolio_tab_view.dart';
 
 class HomeTab extends StatelessWidget {
-  final PortfolioData portfolioData;
+  // Remove portfolioData field
   final VoidCallback? onProjectsButtonPressed;
 
   const HomeTab({
     super.key,
-    required this.portfolioData,
+    // Remove portfolioData from constructor
     this.onProjectsButtonPressed,
   });
 
   @override
   Widget build(BuildContext context) {
+    // Get data from provider
+    final portfolioData = context.watch<PortfolioData>();
     return PortfolioTabView(
       title: 'Home',
       children: [
@@ -50,8 +53,9 @@ class HomeTab extends StatelessWidget {
           child: ElevatedButton(
             onPressed: onProjectsButtonPressed,
             style: ElevatedButton.styleFrom(
-              backgroundColor: SimplifiedTheme.primaryBlue,
-              foregroundColor: Colors.white,
+              // Use theme colors for consistency
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              foregroundColor: Theme.of(context).colorScheme.onPrimary,
               padding: const EdgeInsets.symmetric(
                 horizontal: 32,
                 vertical: 16,

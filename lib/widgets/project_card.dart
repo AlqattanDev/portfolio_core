@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:portfolio_core/models/project.dart';
 import 'package:portfolio_core/services/url_launcher_service.dart';
+import 'package:portfolio_core/theme/simplified_theme.dart';
 
 class ProjectCard extends StatelessWidget {
   final Project project;
@@ -12,23 +13,23 @@ class ProjectCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    // final isDarkMode = Theme.of(context).brightness == Brightness.dark; // No longer needed directly here
+    final themeExtension =
+        Theme.of(context).extension<PortfolioThemeExtension>()!;
 
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(Theme.of(context)
-            .extension<PortfolioThemeExtension>()!
-            .cardBorderRadius),
-        boxShadow: [
-          BoxShadow(
-            color: Theme.of(context).shadowColor.withAlpha(isDarkMode ? 40 : 20),
-            blurRadius: 8,
-            offset: const Offset(0, 3),
-          ),
-        ],
+        borderRadius: BorderRadius.circular(themeExtension.cardBorderRadius),
+        // Add border for retro themes (which have borderRadius 0)
+        border: themeExtension.cardBorderRadius == 0
+            ? Border.all(
+                color: Theme.of(context)
+                    .dividerColor) // Use divider color for border
+            : null,
+        // Remove explicit shadow, rely on theme elevation if needed (though retro themes have 0)
       ),
-      clipBehavior: Clip.antiAlias,
+      clipBehavior: Clip.antiAlias, // Keep clipping
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -68,14 +69,10 @@ class ProjectCard extends StatelessWidget {
                   spacing: 8,
                   runSpacing: 8,
                   children: project.technologies.map((tech) {
+                    // Use ChipThemeData defined in SimplifiedTheme
                     return Chip(
                       label: Text(tech),
-                      backgroundColor: Theme.of(context).colorScheme.primary
-                          .withAlpha((0.15 * 255).round()),
-                      labelStyle: TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
-                        fontWeight: FontWeight.w500,
-                      ),
+                      // Remove explicit styling to use theme's ChipThemeData
                     );
                   }).toList(),
                 ),
@@ -119,14 +116,7 @@ class ProjectCard extends StatelessWidget {
       onPressed: onPressed,
       icon: Icon(icon, size: 18),
       label: Text(label),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Theme.of(context).colorScheme.onPrimary,
-        padding: Theme.of(context).extension<PortfolioThemeExtension>()!.smallPadding.copyWith(
-          horizontal: 16,
-          vertical: 12,
-        ),
-      ),
+      // Remove explicit style to use theme's ElevatedButtonThemeData
     );
   }
 }
