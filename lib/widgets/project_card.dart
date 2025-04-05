@@ -17,9 +17,7 @@ class ProjectCard extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: isDarkMode
-            ? SimplifiedTheme.backgroundDark
-            : SimplifiedTheme.backgroundLight,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(Theme.of(context)
             .extension<PortfolioThemeExtension>()!
             .cardBorderRadius),
@@ -73,10 +71,10 @@ class ProjectCard extends StatelessWidget {
                   children: project.technologies.map((tech) {
                     return Chip(
                       label: Text(tech),
-                      backgroundColor: SimplifiedTheme.primaryBlue
+                      backgroundColor: Theme.of(context).colorScheme.primary
                           .withAlpha((0.15 * 255).round()),
                       labelStyle: TextStyle(
-                        color: SimplifiedTheme.primaryBlue,
+                        color: Theme.of(context).colorScheme.primary,
                         fontWeight: FontWeight.w500,
                       ),
                     );
@@ -123,7 +121,7 @@ class ProjectCard extends StatelessWidget {
       icon: Icon(icon, size: 18),
       label: Text(label),
       style: ElevatedButton.styleFrom(
-        backgroundColor: SimplifiedTheme.primaryBlue,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Colors.white,
         padding: const EdgeInsets.symmetric(
           horizontal: 16,

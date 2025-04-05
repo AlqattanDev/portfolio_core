@@ -35,6 +35,17 @@ class PortfolioApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Set up the theme configuration
+    SimplifiedTheme.updateThemeConfiguration(
+      const ThemeConfiguration(
+        // You can customize colors here
+        primaryColor: SimplifiedTheme.primaryBlue,
+        secondaryLightColor: SimplifiedTheme.accentGreen,
+        secondaryDarkColor: SimplifiedTheme.accentPurple,
+        // Or leave defaults by not specifying them
+      ),
+    );
+
     return MaterialApp(
       title: 'Portfolio Core',
       debugShowCheckedModeBanner: false,

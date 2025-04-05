@@ -2,6 +2,76 @@ import 'dart:ui' show lerpDouble;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+/// Configuration class for theme properties
+class ThemeConfiguration {
+  final Color primaryColor;
+  final Color secondaryLightColor;
+  final Color secondaryDarkColor;
+  final Color backgroundLightColor;
+  final Color backgroundDarkColor;
+  final Color cardLightColor;
+  final Color cardDarkColor;
+  final Color textDarkColor;
+  final Color textLightColor;
+  final double cardBorderRadius;
+  final EdgeInsets screenPadding;
+  final EdgeInsets contentPadding;
+  final EdgeInsets smallPadding;
+  final double itemSpacing;
+
+  const ThemeConfiguration({
+    this.primaryColor = SimplifiedTheme.primaryBlue,
+    this.secondaryLightColor = SimplifiedTheme.accentGreen,
+    this.secondaryDarkColor = SimplifiedTheme.accentPurple,
+    this.backgroundLightColor = SimplifiedTheme.backgroundLight,
+    this.backgroundDarkColor = SimplifiedTheme.backgroundDark,
+    this.cardLightColor = SimplifiedTheme.cardLight,
+    this.cardDarkColor = SimplifiedTheme.cardDark,
+    this.textDarkColor = SimplifiedTheme.textDark,
+    this.textLightColor = SimplifiedTheme.textLight,
+    this.cardBorderRadius = 12.0,
+    this.screenPadding = const EdgeInsets.all(24.0),
+    this.contentPadding = const EdgeInsets.all(16.0),
+    this.smallPadding = const EdgeInsets.all(8.0),
+    this.itemSpacing = 16.0,
+  });
+
+  // Create a copy with some properties changed
+  ThemeConfiguration copyWith({
+    Color? primaryColor,
+    Color? secondaryLightColor,
+    Color? secondaryDarkColor,
+    Color? backgroundLightColor,
+    Color? backgroundDarkColor,
+    Color? cardLightColor,
+    Color? cardDarkColor,
+    Color? textDarkColor,
+    Color? textLightColor,
+    double? cardBorderRadius,
+    EdgeInsets? screenPadding,
+    EdgeInsets? contentPadding,
+    EdgeInsets? smallPadding,
+    double? itemSpacing,
+  }) {
+    return ThemeConfiguration(
+      primaryColor: primaryColor ?? this.primaryColor,
+      secondaryLightColor: secondaryLightColor ?? this.secondaryLightColor,
+      secondaryDarkColor: secondaryDarkColor ?? this.secondaryDarkColor,
+      backgroundLightColor: backgroundLightColor ?? this.backgroundLightColor,
+      backgroundDarkColor: backgroundDarkColor ?? this.backgroundDarkColor,
+      cardLightColor: cardLightColor ?? this.cardLightColor,
+      cardDarkColor: cardDarkColor ?? this.cardDarkColor,
+      textDarkColor: textDarkColor ?? this.textDarkColor,
+      textLightColor: textLightColor ?? this.textLightColor,
+      cardBorderRadius: cardBorderRadius ?? this.cardBorderRadius,
+      screenPadding: screenPadding ?? this.screenPadding,
+      contentPadding: contentPadding ?? this.contentPadding,
+      smallPadding: smallPadding ?? this.smallPadding,
+      itemSpacing: itemSpacing ?? this.itemSpacing,
+    );
+  }
+}
+
 /// A simplified theme class for the portfolio
 class SimplifiedTheme {
   // Primary colors
@@ -21,9 +91,14 @@ class SimplifiedTheme {
   static const Color textDark = Color(0xFF2C3E50);
   static const Color textLight = Color(0xFFABB2BF);
 
-  // Border radius (Moved to PortfolioThemeExtension)
+  // Theme configuration
+  static ThemeConfiguration currentConfig = const ThemeConfiguration();
 
-  // Get Light Theme
+  // Method to update theme configuration
+  static void updateThemeConfiguration(ThemeConfiguration newConfig) {
+    currentConfig = newConfig;
+  }
+
   // Define standard padding/spacing values
   static const EdgeInsets _screenPadding = EdgeInsets.all(24.0);
   static const EdgeInsets _contentPadding = EdgeInsets.all(16.0);
@@ -31,35 +106,34 @@ class SimplifiedTheme {
   static const double _itemSpacing = 16.0;
 
   static ThemeData getLightTheme() {
-    const double borderRadius = 12.0; // Define locally for theme creation
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
-      primaryColor: primaryBlue,
+      primaryColor: currentConfig.primaryColor,
       colorScheme: ColorScheme.fromSeed(
-        seedColor: primaryBlue,
+        seedColor: currentConfig.primaryColor,
         brightness: Brightness.light,
-        secondary: accentGreen,
+        secondary: currentConfig.secondaryLightColor,
       ),
-      scaffoldBackgroundColor: backgroundLight,
-      cardColor: cardLight,
+      scaffoldBackgroundColor: currentConfig.backgroundLightColor,
+      cardColor: currentConfig.cardLightColor,
       textTheme: getTextTheme(false),
       cardTheme: CardTheme(
         elevation: 2,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(borderRadius),
+          borderRadius: BorderRadius.circular(currentConfig.cardBorderRadius),
         ),
-        color: cardLight,
+        color: currentConfig.cardLightColor,
       ),
       appBarTheme: AppBarTheme(
         centerTitle: true,
         elevation: 0,
-        backgroundColor: cardLight,
-        iconTheme: const IconThemeData(color: primaryBlue),
+        backgroundColor: currentConfig.cardLightColor,
+        iconTheme: IconThemeData(color: currentConfig.primaryColor),
         titleTextStyle: GoogleFonts.inter(
           fontSize: 20,
           fontWeight: FontWeight.bold,
-          color: primaryBlue,
+          color: currentConfig.primaryColor,
         ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
@@ -67,14 +141,14 @@ class SimplifiedTheme {
           elevation: 2,
           minimumSize: const Size(100, 50),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(borderRadius),
+            borderRadius: BorderRadius.circular(currentConfig.cardBorderRadius),
           ),
         ),
       ),
       chipTheme: ChipThemeData(
-        backgroundColor: primaryBlue.withAlpha(((0.15) * 255).round()),
+        backgroundColor: currentConfig.primaryColor.withAlpha(((0.15) * 255).round()),
         labelStyle: GoogleFonts.inter(
-          color: primaryBlue,
+          color: currentConfig.primaryColor,
           fontWeight: FontWeight.w500,
           fontSize: 12,
         ),
@@ -84,9 +158,9 @@ class SimplifiedTheme {
         padding: const EdgeInsets.symmetric(horizontal: 8),
       ),
       tabBarTheme: TabBarTheme(
-        labelColor: primaryBlue,
-        unselectedLabelColor: textDark.withAlpha(((0.7) * 255).round()),
-        indicatorColor: primaryBlue,
+        labelColor: currentConfig.primaryColor,
+        unselectedLabelColor: currentConfig.textDarkColor.withAlpha(((0.7) * 255).round()),
+        indicatorColor: currentConfig.primaryColor,
         indicatorSize: TabBarIndicatorSize.tab,
         labelStyle: GoogleFonts.inter(
           fontSize: 14,
@@ -96,13 +170,13 @@ class SimplifiedTheme {
           fontSize: 14,
         ),
       ),
-      extensions: const <ThemeExtension<dynamic>>[
+      extensions: <ThemeExtension<dynamic>>[
         PortfolioThemeExtension(
-          cardBorderRadius: borderRadius,
-          screenPadding: _screenPadding,
-          contentPadding: _contentPadding,
-          smallPadding: _smallPadding,
-          itemSpacing: _itemSpacing,
+          cardBorderRadius: currentConfig.cardBorderRadius,
+          screenPadding: currentConfig.screenPadding,
+          contentPadding: currentConfig.contentPadding,
+          smallPadding: currentConfig.smallPadding,
+          itemSpacing: currentConfig.itemSpacing,
         ),
       ],
     );
@@ -110,35 +184,34 @@ class SimplifiedTheme {
 
   // Get Dark Theme
   static ThemeData getDarkTheme() {
-    const double borderRadius = 12.0; // Define locally for theme creation
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
-      primaryColor: primaryBlue,
+      primaryColor: currentConfig.primaryColor,
       colorScheme: ColorScheme.fromSeed(
-        seedColor: primaryBlue,
+        seedColor: currentConfig.primaryColor,
         brightness: Brightness.dark,
-        secondary: accentPurple,
+        secondary: currentConfig.secondaryDarkColor,
       ),
-      scaffoldBackgroundColor: backgroundDark,
-      cardColor: cardDark,
+      scaffoldBackgroundColor: currentConfig.backgroundDarkColor,
+      cardColor: currentConfig.cardDarkColor,
       textTheme: getTextTheme(true),
       cardTheme: CardTheme(
         elevation: 2,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(borderRadius),
+          borderRadius: BorderRadius.circular(currentConfig.cardBorderRadius),
         ),
-        color: cardDark,
+        color: currentConfig.cardDarkColor,
       ),
       appBarTheme: AppBarTheme(
         centerTitle: true,
         elevation: 0,
-        backgroundColor: cardDark,
-        iconTheme: const IconThemeData(color: primaryBlue),
+        backgroundColor: currentConfig.cardDarkColor,
+        iconTheme: IconThemeData(color: currentConfig.primaryColor),
         titleTextStyle: GoogleFonts.inter(
           fontSize: 20,
           fontWeight: FontWeight.bold,
-          color: primaryBlue,
+          color: currentConfig.primaryColor,
         ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
@@ -146,14 +219,14 @@ class SimplifiedTheme {
           elevation: 2,
           minimumSize: const Size(100, 50),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(borderRadius),
+            borderRadius: BorderRadius.circular(currentConfig.cardBorderRadius),
           ),
         ),
       ),
       chipTheme: ChipThemeData(
-        backgroundColor: primaryBlue.withAlpha(((0.15) * 255).round()),
+        backgroundColor: currentConfig.primaryColor.withAlpha(((0.15) * 255).round()),
         labelStyle: GoogleFonts.inter(
-          color: primaryBlue,
+          color: currentConfig.primaryColor,
           fontWeight: FontWeight.w500,
           fontSize: 12,
         ),
@@ -163,9 +236,9 @@ class SimplifiedTheme {
         padding: const EdgeInsets.symmetric(horizontal: 8),
       ),
       tabBarTheme: TabBarTheme(
-        labelColor: primaryBlue,
-        unselectedLabelColor: textLight.withAlpha(((0.7) * 255).round()),
-        indicatorColor: primaryBlue,
+        labelColor: currentConfig.primaryColor,
+        unselectedLabelColor: currentConfig.textLightColor.withAlpha(((0.7) * 255).round()),
+        indicatorColor: currentConfig.primaryColor,
         indicatorSize: TabBarIndicatorSize.tab,
         labelStyle: GoogleFonts.inter(
           fontSize: 14,
@@ -175,13 +248,13 @@ class SimplifiedTheme {
           fontSize: 14,
         ),
       ),
-      extensions: const <ThemeExtension<dynamic>>[
+      extensions: <ThemeExtension<dynamic>>[
         PortfolioThemeExtension(
-          cardBorderRadius: borderRadius,
-          screenPadding: _screenPadding,
-          contentPadding: _contentPadding,
-          smallPadding: _smallPadding,
-          itemSpacing: _itemSpacing,
+          cardBorderRadius: currentConfig.cardBorderRadius,
+          screenPadding: currentConfig.screenPadding,
+          contentPadding: currentConfig.contentPadding,
+          smallPadding: currentConfig.smallPadding,
+          itemSpacing: currentConfig.itemSpacing,
         ),
       ],
     );
@@ -189,29 +262,31 @@ class SimplifiedTheme {
 
   // Text Styles
   static TextTheme getTextTheme(bool isDark) {
-    final Color textColor = isDark ? textLight : textDark;
+    final Color textColor = isDark ? currentConfig.textLightColor : currentConfig.textDarkColor;
+    final Color accentColor = currentConfig.primaryColor;
+    final Color secondaryColor = isDark ? currentConfig.secondaryDarkColor : currentConfig.secondaryLightColor;
 
     return TextTheme(
       displayLarge: GoogleFonts.inter(
         fontSize: 42,
         fontWeight: FontWeight.bold,
         letterSpacing: -0.5,
-        color: isDark ? primaryBlue : primaryBlue,
+        color: accentColor,
       ),
       displayMedium: GoogleFonts.inter(
         fontSize: 34,
         fontWeight: FontWeight.bold,
-        color: isDark ? primaryBlue : primaryBlue,
+        color: accentColor,
       ),
       displaySmall: GoogleFonts.inter(
         fontSize: 28,
         fontWeight: FontWeight.bold,
-        color: isDark ? primaryBlue : primaryBlue,
+        color: accentColor,
       ),
       headlineLarge: GoogleFonts.inter(
         fontSize: 24,
         fontWeight: FontWeight.w600,
-        color: isDark ? accentPurple : accentGreen,
+        color: secondaryColor,
       ),
       headlineMedium: GoogleFonts.inter(
         fontSize: 20,
@@ -221,7 +296,7 @@ class SimplifiedTheme {
       titleLarge: GoogleFonts.inter(
         fontSize: 18,
         fontWeight: FontWeight.w600,
-        color: isDark ? accentGreen : primaryBlue,
+        color: isDark ? secondaryColor : accentColor,
       ),
       bodyLarge: GoogleFonts.inter(
         fontSize: 18,
