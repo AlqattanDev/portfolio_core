@@ -26,7 +26,7 @@ class ContactInfoItem extends StatelessWidget {
       children: [
         Icon(
           icon,
-          color: SimplifiedTheme.primaryBlue,
+          color: Theme.of(context).colorScheme.primary,
           size: iconSize,
         ),
         const SizedBox(width: 16),
@@ -42,7 +42,7 @@ class ContactInfoItem extends StatelessWidget {
                 value,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: isClickable ? SimplifiedTheme.primaryBlue : null,
+                      color: isClickable ? Theme.of(context).colorScheme.primary : null,
                     ),
               ),
             ],
@@ -51,7 +51,7 @@ class ContactInfoItem extends StatelessWidget {
         if (isClickable)
           Icon(
             Icons.arrow_forward_ios,
-            color: SimplifiedTheme.primaryBlue,
+            color: Theme.of(context).colorScheme.primary,
             size: 16,
           ),
       ],
@@ -74,9 +74,7 @@ class ContactInfoItem extends StatelessWidget {
             .extension<PortfolioThemeExtension>()!
             .contentPadding,
         decoration: BoxDecoration(
-          color: isDarkMode
-              ? SimplifiedTheme.backgroundDark
-              : SimplifiedTheme.backgroundLight,
+          color: Theme.of(context).scaffoldBackgroundColor,
           borderRadius: BorderRadius.circular(Theme.of(context)
               .extension<PortfolioThemeExtension>()!
               .cardBorderRadius),
