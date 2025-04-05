@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:portfolio_core/models/project.dart';
-import 'package:portfolio_core/theme/simplified_theme.dart';
 import 'package:portfolio_core/services/url_launcher_service.dart';
 
 class ProjectCard extends StatelessWidget {
@@ -23,7 +22,7 @@ class ProjectCard extends StatelessWidget {
             .cardBorderRadius),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withAlpha(isDarkMode ? 40 : 20),
+            color: Theme.of(context).shadowColor.withAlpha(isDarkMode ? 40 : 20),
             blurRadius: 8,
             offset: const Offset(0, 3),
           ),
@@ -122,8 +121,8 @@ class ProjectCard extends StatelessWidget {
       label: Text(label),
       style: ElevatedButton.styleFrom(
         backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Colors.white,
-        padding: const EdgeInsets.symmetric(
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+        padding: Theme.of(context).extension<PortfolioThemeExtension>()!.smallPadding.copyWith(
           horizontal: 16,
           vertical: 12,
         ),
